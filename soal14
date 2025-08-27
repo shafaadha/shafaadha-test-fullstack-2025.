@@ -1,0 +1,28 @@
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func faktorial(n int) int {
+	if n == 0 || n == 1 {
+		return 1
+	}
+	hasil := 1
+	for i := 2; i <= n; i++ {
+		hasil *= i
+	}
+	return hasil
+}
+
+func f(n int) int {
+	factorial := faktorial(n)
+	duaPangkatN := int(math.Pow(2, float64(n)))
+	hasil := float64(factorial) / float64(duaPangkatN)
+	return int(math.Ceil(hasil))
+}
+
+func main() {
+	fmt.Println("hasilnya:", f(10))
+}
