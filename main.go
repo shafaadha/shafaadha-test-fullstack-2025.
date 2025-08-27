@@ -9,6 +9,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -23,10 +24,24 @@ type Account struct {
 var rdb *redis.Client
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("⚠️  .env file not found, using system env")
+	}
+	
+	addr := os.Getenv("REDIS_ADDR")
+	password := os.Getenv("REDIS_PASSWORD")
+	dbStr := os.Getenv("REDIS_DB")
+	db, _ := strconv.Atoi(dbStr)
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "3000"
+	}
+
+	// Setup Redis client
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     "redis-10846.c256.us-east-1-2.ec2.redns.redis-cloud.com:10846",
-		Password: "UrYNfii39pHxYuQpHiv3kMHuouUkoZ9M",
-		DB:       0,
+		Addr:     addr,
+		Password: password,
+		DB:       db,
 	})
 
 	app := fiber.New()
@@ -107,3 +122,4 @@ func login(c *fiber.Ctx) error {
 		"email":    user.Email,
 	})
 }
+
